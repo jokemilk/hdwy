@@ -6,4 +6,3 @@ void AD_getdata(unsigned char num); //
 
 #endif
 
-
