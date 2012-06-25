@@ -1,0 +1,9 @@
+/*			while((Vi < 328 && Vi>=0) ||(Vi >16056))//-0.2-->+0.2
+			{
+				if(m_liangchen == 1)
+					break;
+				m_liangchen--;
+				huandang(m_liangchen);
+				_delay_us(20);
+				AD_getdata(2);
+			}*/

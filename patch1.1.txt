@@ -1,0 +1,118 @@
+void kaiji(void)
+{
+	//AD Ð£Õý
+	PORTE |= BIT(4)|BIT(5)|BIT(6)|BIT(7);
+	_delay_ms(100);
+	while(Ad == 0)
+	{
+		AD_getdata(3);
+		_delay_ms(1);
+	}
+	VrefAD_4 = Ad;
+	while(Vw == 0)
+	{
+		AD_getdata(0);
+		_delay_ms(1);
+	}
+	VrefAD_1 = Vw;
+	while(Vr == 0)
+	{
+		AD_getdata(1);
+		_delay_ms(1);
+	}
+	VrefAD_2 = Vr;
+	while(Vi == 0)
+	{
+		AD_getdata(2);
+		_delay_ms(1);
+	}
+	VrefAD_3 = Vi;
+
+#ifdef _PART_EEPROM_
+	flashwrite(4);
+#endif	
+	PORTE &= ~(BIT(4)|BIT(5)|BIT(6)|BIT(7));
+	#ifdef _PART_EEPROM_
+		flashread(5);
+	#endif
+		Vref = VrefAD_5;
+	if(Vref >=0)			//£¿£¿£¿
+		command[5] = 0;
+	else
+		command[5] = 1;
+	command[0] = head;
+	command[1] = 9;
+	command[2] = ~command[1];
+	command[3] = 6;
+	command[4] = ~command[3];
+	if(Vref >=0)
+	{
+		command[6] = ((Vref>>8)&0xFF);
+		command[7] = Vref&0xFF;
+	}else
+	{
+		command[6] = (((-Vref)>>8)&0xFF);
+		command[7] = (-Vref)&0xFF;				
+	}
+	command[8] = tail;
+	puts_1((unsigned char *)command,9);
+	AD_getdata(3);
+	Ad -= VrefAD_4;
+	while((Ad>5) &&(Ad <8192))
+	{
+		Vref-=1,VrefAD_5-=1;
+		command[0] = head;
+		command[1] = 9;
+		command[2] = ~command[1];
+		command[3] = 6;
+		command[4] = ~command[3];
+		if(Vref >=0)
+			command[5] = 0;
+		else
+			command[5] = 1;
+		if(Vref >=0)
+		{
+			command[6] = ((Vref>>8)&0xFF);
+			command[7] = Vref&0xFF;
+		}else
+		{
+			command[6] = (((-Vref)>>8)&0xFF);
+			command[7] = (-Vref)&0xFF;				
+		}
+		command[8] = tail;
+		puts_1((unsigned char *)command,9);
+		AD_getdata(3);
+		if((unsigned int)Ad	>(unsigned int)VrefAD_4)
+		Ad -= VrefAD_4;
+	}
+	while((16384-Ad>5) &&( Ad>8192))
+	{
+		Vref+=1,VrefAD_5+=1;
+		command[0] = head;
+		command[1] = 9;
+		command[2] = ~command[1];
+		command[3] = 6;
+		command[4] = ~command[3];
+		if(Vref >=0)
+			command[5] = 0;
+		else
+			command[5] = 1;
+		if(Vref >=0)
+		{
+			command[6] = ((Vref>>8)&0xFF);
+			command[7] = Vref&0xFF;
+		}else
+		{
+			command[6] = (((-Vref)>>8)&0xFF);
+			command[7] = (-Vref)&0xFF;				
+		}
+		command[8] = tail;
+		puts_1((unsigned char *)command,9);
+		AD_getdata(3);
+		if((unsigned int)Ad	>(unsigned int)VrefAD_4)
+		Ad -= VrefAD_4;
+	}
+		#ifdef _PART_EEPROM_
+			flashwrite(5);
+		#endif	
+}
