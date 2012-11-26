@@ -1,4 +1,3 @@
-
 #ignore thumbnails created by windows
 Thumbs.db
 #Ignore files build by Visual Studio
@@ -27,3 +26,15 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
+*.map
+*.hex
+*.lss
+*.eep
+*.o
+*.o.d
+.metadata*
+core_1_reload/default/core_1_reload.elf
+core_2/default/core_2.elf
+hdwy_core_1/.settings/org.eclipse.cdt.codan.core.prefs
+hdwy_core_1/.settings/org.eclipse.cdt.core.prefs
+hdwy_core_1/.settings/org.eclipse.cdt.ui.prefs
